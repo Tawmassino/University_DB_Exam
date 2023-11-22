@@ -13,8 +13,8 @@ namespace Student_Platform_DB_Exam
         public string? WorkerFirstName { get; set; }
         public string? WorkerLastName { get; set; }
         public string? WorkerPosition { get; set; }
-        public Faculty? WorkerFaculty { get; set; }
-        public Lecture? WorkerLecture { get; set; }
+        public List<Faculty>? WorkerFaculties { get; set; }
+        public List<Lecture>? WorkerLectures { get; set; }
 
     }
 }

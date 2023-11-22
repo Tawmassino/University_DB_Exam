@@ -22,7 +22,7 @@ namespace University_DB_Exam
 
 
         public StudentLevels? StudentLevel { get; set; }
-        public enum StudentLevels { BA, MA, PhD } // Bachelor, Master, Doctorate
+        public enum StudentLevels { BA, MA, PhD, Alumni, Expelled } // Bachelor, Master, Doctorate. Completed, Stopped.
 
         public StudentYears? StudentYear { get; set; }
         public enum StudentYears
