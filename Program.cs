@@ -11,48 +11,13 @@ namespace University_DB_Exam
         static void Main(string[] args)
         {
             Console.WriteLine("Hello, World!");
-            // ============ TO DO ============
-            //====== METHODS TO DO ======
-            //1.Sukurti departamentą ir į jį pridėti studentus, paskaitas(papildomi points jei pridedamos paskaitos jau egzistuojančios duomenų bazėje).
-            //2.Pridėti studentus / paskaitas į jau egzistuojantį departamentą.
-            //3.Sukurti paskaitą ir ją priskirti prie departamento.
-            //4.Sukurti studentą, jį pridėti prie egzistuojančio departamento ir priskirti jam egzistuojančias paskaitas.
-            //5.Perkelti studentą į kitą departamentą(bonus points jei pakeičiamos ir jo paskaitos).
-            //6.Atvaizduoti visus departamento studentus.
-            //7.Atvaizduoti visas departamento paskaitas.
-            //8.Atvaizduoti visas paskaitas pagal studentą.
+            // ============ TO DO ============           
 
-            //MANO
-            //paskaitos destytojas
-            //lankomumas
-            //pazymiai
-            //namu darbai
-
-            //========
-            //DELETE
-            //var page = new Page(new Guid("0915CC69-5CF9-4749-9DE3-C189A0950E7F"));//paduodame ID pagal kuri triname
-            //dbContext.Pages.Remove(page);
-            //dbContext.SaveChanges();
-
-
-            //SELECT
-            //var page = dbContext.Pages.FirstOrDefault();//pirmas psl duombazej. galima naudoti linq.
-            //cia savechanges nereikia, nes nieko nekeiciam, tiesiog view
-            //var page = dbContext.Pages.Where(p=>p.Number == 2);
-
-
-            //UPDATE
-            //var page = dbContext.Pages.First(p => p.Id == Guid.Parse("F7A7849A-E174-4C6B-B6CF-0B4C301FFB2C"));
-            //page.Content += ". Added new content.";
-            //dbContext.SaveChanges();
 
             //----------- program start ----------
             using var dbContext = new UniContext();
 
-            //while (true)
-            //{
-            //    ShowMenu(myRestaurant, menuManager);
-            //}
+            MainMenu();
 
 
         }
@@ -62,34 +27,36 @@ namespace University_DB_Exam
 
         // ====================================== METHODS  ======================================
 
-        // A METHOD THAT ........
-
-        // ...shows menu
-        // ...returns to main menu
+        // A METHOD THAT ........        
 
         //----------
         #region ShowMethods
 
         //...show all faculties
-        public void ShowAllFaculties()
+        public static void ShowAllFaculties()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             List<Faculty> allFacultyNames = dbContext.Faculties.ToList();
-
+            Console.WriteLine();
+            Console.WriteLine("=====================================");
+            Console.WriteLine("All faculties:");
             foreach (Faculty faculty in allFacultyNames)
             {
                 Console.WriteLine(faculty.FacultyName);
             };
             Console.WriteLine();
-
+            Console.WriteLine("=====================================");
+            InputKeyToContinue();
         }
 
         //...show all lectures
-        public void ShowAllLectures()
+        public static void ShowAllLectures()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             List<Lecture> allLectureNames = dbContext.Lectures.ToList();
-
+            Console.WriteLine();
+            Console.WriteLine("=====================================");
+            Console.WriteLine("All lectures:");
             foreach (Lecture lecture in allLectureNames)
             {
                 string facultyNames = string.Join(", ", lecture.LectureFaculties.Select(f => f.FacultyName));
@@ -97,23 +64,42 @@ namespace University_DB_Exam
                 Console.WriteLine($"{lecture.LectureName}: {lecture.Id} - {lecture.LectureWorker} @ {facultyNames}");
                 Console.WriteLine();
             };
-
+            Console.WriteLine("=====================================");
+            InputKeyToContinue();
         }
 
         //...show all students
-        public void ShowAllStudents()
+        public static void ShowAllStudents()
         {
-            var dbContext = new UniContext();
-            List<string> allStudentNames = dbContext.Students.Select(s => $"{s.Id}: {s.StudentFirstName} {s.StudentLastName}").ToList();
+            using var dbContext = new UniContext();
+            var allStudents = dbContext.Students.ToList();
 
-            Console.WriteLine(allStudentNames);
+            Console.WriteLine();
+
+            if (allStudents.Any())
+            {
+                Console.WriteLine("=====================================");
+                Console.WriteLine(" ====== All Students ======");
+
+                foreach (var student in allStudents)
+                {
+                    Console.WriteLine($"{student.Id}: {student.StudentFirstName} {student.StudentLastName}");
+                }
+                Console.WriteLine("=====================================");
+            }
+            else
+            {
+                Console.WriteLine("No students found.");
+            }
+            InputKeyToContinue();
         }
 
 
+
         //...show all students from a faculty
-        public void ShowAllStudentsFromFaculty()
+        public static void ShowAllStudentsFromFaculty()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
 
             ShowAllFaculties();
             Console.WriteLine("Select a faculty to view students");
@@ -140,6 +126,7 @@ namespace University_DB_Exam
                 Console.WriteLine($"Level: {student.StudentLevel} || Year: {student.StudentYear}");
                 Console.WriteLine();
             }
+            InputKeyToContinue();
         }
 
 
@@ -148,9 +135,9 @@ namespace University_DB_Exam
 
 
         //...show all lectures of a faculty
-        public void ShowAllLecturesOfFaculty()
+        public static void ShowAllLecturesOfFaculty()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             Console.WriteLine("View all faculties?");
             string viewChoice = Console.ReadLine();
             if (viewChoice == "y")
@@ -185,12 +172,12 @@ namespace University_DB_Exam
                 Console.WriteLine($"Lecture Faculty: {string.Join(", ", lecture.LectureFaculties.Select(f => f.FacultyName))}");
                 Console.WriteLine();
             }
-
+            InputKeyToContinue();
         }
         //...show all lectures of individual student
-        public void ShowAllLecturesOfOneStudent()
+        public static void ShowAllLecturesOfOneStudent()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
 
             // If you don't know which student you want
             ShowAllStudentsFromFaculty();
@@ -227,12 +214,7 @@ namespace University_DB_Exam
                 Console.WriteLine("Invalid Student ID format. Please enter a valid GUID.");
             }
 
-            //ask if user wants to do any more operations with this student
-        }
-
-        public void ShowOneLectureData()
-        {
-
+            InputKeyToContinue();
         }
 
         #endregion
@@ -243,9 +225,9 @@ namespace University_DB_Exam
 
 
         // ...creates new faculty
-        public Faculty CreateNewFaculty()
+        public static Faculty CreateNewFaculty()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
 
             string confirmNewFaculty = "n";
             Faculty facultyNew = null;
@@ -287,13 +269,15 @@ namespace University_DB_Exam
             Console.WriteLine("Faculty created successfully!");
             dbContext.Faculties.Add(facultyNew);
             dbContext.SaveChanges();
+            InputKeyToContinue();
             return facultyNew;
+
         }
 
         // ...creates new lecture
-        public Lecture CreateNewLecture()
+        public static Lecture CreateNewLecture()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
 
             string confirmNewLecture = "n";
             Lecture lectureNew = null;
@@ -335,13 +319,14 @@ namespace University_DB_Exam
             Console.WriteLine("Lecture created successfully!");
             dbContext.Lectures.Add(lectureNew);
             dbContext.SaveChanges();
+            InputKeyToContinue();
             return lectureNew;
         }
 
         // ...creates new student
-        public Student CreateNewStudent()
+        public static Student CreateNewStudent()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             string confirmNewStudent = "n";
             Student studentNew = null;
 
@@ -409,6 +394,7 @@ namespace University_DB_Exam
             Console.WriteLine("Student created successfully!");
             dbContext.Students.Add(studentNew);
             dbContext.SaveChanges();
+            InputKeyToContinue();
             return studentNew;
         }
         #endregion
@@ -418,9 +404,9 @@ namespace University_DB_Exam
         #region Add
 
         //adds student(s) to faculty
-        public void AddStudentToFaculty()
+        public static void AddStudentToFaculty()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             string confirmAddStudent = "n";
 
             while (confirmAddStudent == "n" || confirmAddStudent == "abort")
@@ -463,23 +449,78 @@ namespace University_DB_Exam
 
                         Console.WriteLine($"Student {selectedStudent.Id}: {selectedStudent.StudentFirstName} {selectedStudent.StudentLastName} added successfully to {foundFaculty.FacultyName}!");
 
-                        //ask whether to add another student??                        
+                        //ask whether to add another student?? - no time                        
                     }
                 }
             }
+            InputKeyToContinue();
             dbContext.SaveChanges();
         }
+
+        public static void AddLectureToFaculty()
+        {
+            using var dbContext = new UniContext();
+            string confirmAddLecture = "n";
+
+            while (confirmAddLecture == "n" || confirmAddLecture == "abort")
+            {
+                Console.WriteLine("Type ID of the lecture to update ");
+                string inputLectureID = Console.ReadLine();
+
+                if (Guid.TryParse(inputLectureID, out Guid lectureId))
+                {
+                    Lecture foundLecture = dbContext.Lectures.FirstOrDefault(l => l.Id == lectureId);
+
+                    if (foundLecture != null)
+                    {
+                        Console.WriteLine($"Enter the name of the Faculty to add lecture {foundLecture.Id}: {foundLecture.LectureName} to");
+                        string facultyNameToWhereAddLecture = Console.ReadLine();
+
+                        // find Faculty by name
+                        Faculty foundFaculty = dbContext.Faculties.SingleOrDefault(f => f.FacultyName == facultyNameToWhereAddLecture);
+
+                        if (foundFaculty == null)
+                        {
+                            Console.WriteLine($"Faculty with name '{facultyNameToWhereAddLecture}' not found.");
+                            continue;
+                        }
+
+                        Console.WriteLine("Confirm? (y/n)");
+                        Console.WriteLine(@"Type {abort} to quit");
+                        confirmAddLecture = Console.ReadLine().ToLower();
+
+                        if (confirmAddLecture == "abort")
+                        {
+                            Console.WriteLine("Operation aborted");
+                            break;
+                        }
+
+                        // UPDATE
+                        foundLecture.LectureFaculties.Add(foundFaculty);
+
+                        Console.WriteLine($"Lecture {foundLecture.Id}: {foundLecture.LectureName} added successfully to {foundFaculty.FacultyName}!");
+
+                        // ask whether to add another lecture?
+                    }
+                }
+            }
+            InputKeyToContinue();
+            dbContext.SaveChanges();
+        }
+
+        #endregion
 
         // --- update ---
         #region UpdateFaculty
 
-        public void UpdateFacultyData()
+        public static void UpdateFacultyData()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             string confirmUpdate = "n";
 
             while (confirmUpdate == "n" || confirmUpdate == "abort")
             {
+                ShowAllFaculties();
                 Console.WriteLine("Enter the name of the faculty to update");
                 string facultyNameToUpdate = Console.ReadLine();
 
@@ -497,7 +538,7 @@ namespace University_DB_Exam
                     {
                         case "1":
                             ProcessFacultyUpdate(foundFaculty);
-                            ConfirmAndUpdateFaculty(confirmUpdate);
+                            ConfirmAndUpdateFaculty(foundFaculty);
                             break;
 
                         case "2":
@@ -523,13 +564,13 @@ namespace University_DB_Exam
         private static void DisplayFacultyDetails(Faculty faculty)
         {
             Console.WriteLine(" =========== Faculty found! ===========");
-            Console.WriteLine($"{faculty.FacultyName}: Dean - {faculty.FacultyDean?.WorkerFirstName} {faculty.FacultyDean.WorkerLastName}");
+            Console.WriteLine($"{faculty.FacultyName}: Dean - {faculty.Id}");
         }
 
-        private void ProcessFacultyUpdate(Faculty foundFaculty)
+        private static void ProcessFacultyUpdate(Faculty foundFaculty)
         {
             Console.WriteLine(" =========== What to change? =========== ");
-            Console.WriteLine("NAME || DEAN |||||| [ABORT]");
+            Console.WriteLine("NAME || DEAN ||| [ABORT]");
             string facultyUpdateChoice = Console.ReadLine().ToUpper();
 
             switch (facultyUpdateChoice)
@@ -556,55 +597,67 @@ namespace University_DB_Exam
             Console.WriteLine("Input a new name for the faculty");
             string facultyNewInputName = Console.ReadLine();
             foundFaculty.FacultyName = facultyNewInputName;
+            Console.WriteLine($" New Faculty name is: {facultyNewInputName}");
+            InputKeyToContinue();
         }
 
-        private void UpdateFacultyDean(Faculty foundFaculty)
+        private static void UpdateFacultyDean(Faculty foundFaculty)
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
 
-            Console.WriteLine("Enter the ID of the new dean for the faculty");
-            string deanIdToUpdate = Console.ReadLine();
+            Console.WriteLine("Enter the first name of the new dean for the faculty");
+            string newDeanFirstName = Console.ReadLine();
 
-            if (Guid.TryParse(deanIdToUpdate, out Guid parsedDeanIdToUpdate))
+            Console.WriteLine("Enter the last name of the new dean for the faculty");
+            string newDeanLastName = Console.ReadLine();
+
+            Worker deanToUpdate = dbContext.Workers.FirstOrDefault(w =>
+                w.WorkerFirstName == newDeanFirstName && w.WorkerLastName == newDeanLastName);
+
+            if (deanToUpdate != null)
             {
-                Worker deanToUpdate = dbContext.Workers.FirstOrDefault(w => w.Id == parsedDeanIdToUpdate);
-
-                if (deanToUpdate != null)
-                {
-                    foundFaculty.FacultyDean = deanToUpdate;
-                }
-                else
-                {
-                    Console.WriteLine($"Dean with ID '{deanIdToUpdate}' not found.");
-                }
+                foundFaculty.FacultyDean = deanToUpdate;
+                Console.WriteLine($"New Faculty Dean name is {deanToUpdate.WorkerFirstName} {deanToUpdate.WorkerLastName}");
+                InputKeyToContinue();
             }
             else
             {
-                Console.WriteLine("Invalid dean ID format.");
+                Console.WriteLine($"Dean with name '{newDeanFirstName} {newDeanLastName}' not found.");
+                InputKeyToContinue();
             }
         }
 
-        private static void ConfirmAndUpdateFaculty(string confirmUpdate)
+
+
+        private static void ConfirmAndUpdateFaculty(Faculty foundFaculty)
         {
             var dbContext = new UniContext();
+
             Console.WriteLine("Confirm Faculty updates? (y/n)");
             Console.WriteLine(@"Type {abort} to quit");
-            confirmUpdate = Console.ReadLine().ToLower();
+            string confirmUpdate = Console.ReadLine().ToLower();
 
             if (confirmUpdate == "abort")
             {
                 Console.WriteLine("Operation aborted");
+                InputKeyToContinue();
+            }
+            else if (confirmUpdate == "y")
+            {
+                // Update faculty here
+                Console.WriteLine("Faculty updated successfully!");
+                dbContext.SaveChanges();
+                InputKeyToContinue();
             }
             else
             {
-                Console.WriteLine("Faculty updated successfully!");
-                dbContext.SaveChanges();
+                Console.WriteLine("Invalid input. Operation aborted");
             }
         }
 
-        private void ConfirmAndRemoveFaculty(Faculty foundFaculty, string confirmUpdate)
+        private static void ConfirmAndRemoveFaculty(Faculty foundFaculty, string confirmUpdate)
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
 
             Console.WriteLine("Are you sure you want to remove this faculty? (y/n)");
             confirmUpdate = Console.ReadLine().ToLower();
@@ -614,14 +667,13 @@ namespace University_DB_Exam
                 dbContext.Faculties.Remove(foundFaculty);
                 dbContext.SaveChanges();
                 Console.WriteLine("Faculty removed successfully!");
+                InputKeyToContinue();
             }
             else
             {
                 Console.WriteLine("Operation aborted");
             }
         }
-
-        //update faculty lectures (add/update/remove)
 
         #endregion
 
@@ -631,13 +683,16 @@ namespace University_DB_Exam
         #region UpdateLecture
 
 
-        public void UpdateLecture()
+        public static void UpdateLecture()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             string confirmLecture = "n";
 
             while (confirmLecture == "n" || confirmLecture == "abort")
             {
+                Console.WriteLine();
+                ShowAllLectures();
+
                 Console.WriteLine("Type ID of the lecture to update ");
                 string inputLectureID = Console.ReadLine();
 
@@ -660,11 +715,13 @@ namespace University_DB_Exam
                     else
                     {
                         Console.WriteLine("Lecture not found!");
+                        InputKeyToContinue();
                     }
                 }
                 else
                 {
                     Console.WriteLine("Invalid lecture ID format.");
+                    InputKeyToContinue();
                 }
             }
         }
@@ -678,15 +735,17 @@ namespace University_DB_Exam
             if (confirmLecture == "abort")
             {
                 Console.WriteLine("Operation aborted");
+                InputKeyToContinue();
             }
             else
             {
                 Console.WriteLine("Lecture updated successfully!");
                 dbContext.SaveChanges();
+                InputKeyToContinue();
             }
         }
 
-        private void ProcessLectureAction(Lecture foundLecture, string lectureActionChoice, UniContext dbContext)
+        private static void ProcessLectureAction(Lecture foundLecture, string lectureActionChoice, UniContext dbContext)
         {
             switch (lectureActionChoice)
             {
@@ -711,6 +770,7 @@ namespace University_DB_Exam
 
                 default:
                     Console.WriteLine("Invalid option");
+                    InputKeyToContinue();
                     break;
             }
         }
@@ -720,26 +780,31 @@ namespace University_DB_Exam
             Console.WriteLine("input a new name for the lecture");
             string lectureNewInputName = Console.ReadLine();
             foundLecture.LectureName = lectureNewInputName;
+            Console.WriteLine($"New Lecture Name: {lectureNewInputName}");
+            InputKeyToContinue();
         }
 
-        private void UpdateLectureWorker(Lecture foundLecture, UniContext dbContext)
+        private static void UpdateLectureWorker(Lecture foundLecture, UniContext dbContext)
         {
             Console.WriteLine("Select a new worker for the lecture");
             string workerOfLectureNameToChange = Console.ReadLine();
-            Worker foundWorker = dbContext.Workers.FirstOrDefault(w =>
+            Worker? foundWorker = dbContext.Workers.FirstOrDefault(w =>
                 w.WorkerFirstName + " " + w.WorkerLastName == workerOfLectureNameToChange);
 
             if (foundWorker != null)
             {
                 foundLecture.LectureWorker = foundWorker;
+                Console.WriteLine($"The Lecturer for {foundLecture} is now {workerOfLectureNameToChange}");
+                InputKeyToContinue();
             }
             else
             {
                 Console.WriteLine($"Worker with name '{workerOfLectureNameToChange}' not found.");
+                InputKeyToContinue();
             }
         }
 
-        private void UpdateLectureFaculty(Lecture foundLecture, UniContext dbContext)
+        private static void UpdateLectureFaculty(Lecture foundLecture, UniContext dbContext)
         {
             Console.WriteLine("Current Faculties: " + string.Join(", ", foundLecture.LectureFaculties.Select(f => f.FacultyName)));
             Console.WriteLine("Options: [1] Add faculty, [2] Update faculty, [3] Cancel");
@@ -761,11 +826,12 @@ namespace University_DB_Exam
 
                 default:
                     Console.WriteLine("Invalid option");
+                    InputKeyToContinue();
                     break;
             }
         }
 
-        private void AddExistingFacultyToLecture(Lecture foundLecture, UniContext dbContext)
+        private static void AddExistingFacultyToLecture(Lecture foundLecture, UniContext dbContext)
         {
             Console.WriteLine("Enter the name of the existing faculty to add");
             string facultyNameToAdd = Console.ReadLine();
@@ -776,11 +842,11 @@ namespace University_DB_Exam
             {
                 foundLecture.LectureFaculties.Add(facultyToAdd);
             }
-            else if (facultyToAdd == null) { Console.WriteLine($"Faculty with name '{facultyNameToAdd}' not found."); }
-            else { Console.WriteLine("Faculty is already assigned to the lecture."); }
+            else if (facultyToAdd == null) { Console.WriteLine($"Faculty with name '{facultyNameToAdd}' not found."); InputKeyToContinue(); }
+            else { Console.WriteLine("Faculty is already assigned to the lecture."); InputKeyToContinue(); }
         }
 
-        private void UpdateExistingFacultyInLecture(Lecture foundLecture, UniContext dbContext)
+        private static void UpdateExistingFacultyInLecture(Lecture foundLecture, UniContext dbContext)
         {
             Console.WriteLine("Enter the name of the faculty to update");
             string facultyNameToUpdate = Console.ReadLine();
@@ -791,14 +857,16 @@ namespace University_DB_Exam
                 Console.WriteLine("Enter the new name for the faculty");
                 string newFacultyNameToUpdate = Console.ReadLine();
                 facultyToUpdate.FacultyName = newFacultyNameToUpdate;
+                Console.WriteLine($"The new name of the faculty is now {newFacultyNameToUpdate}");
+                InputKeyToContinue();
             }
             else
             {
-                Console.WriteLine($"Faculty with name '{facultyNameToUpdate}' not found.");
+                Console.WriteLine($"Faculty with name '{facultyNameToUpdate}' not found."); InputKeyToContinue();
             }
         }
 
-        private void UpdateLectureStudents(Lecture foundLecture, UniContext dbContext)
+        private static void UpdateLectureStudents(Lecture foundLecture, UniContext dbContext)
         {
             Console.WriteLine("Current Students: " + string.Join(", ", foundLecture.LectureStudents.Select(s => s.StudentFirstName + " " + s.StudentLastName)));
             Console.WriteLine("Options: [1] Add existing student, [2] Remove existing student, [3] Cancel");
@@ -820,11 +888,12 @@ namespace University_DB_Exam
 
                 default:
                     Console.WriteLine("Invalid option");
+                    InputKeyToContinue();
                     break;
             }
         }
 
-        private void AddExistingStudentToLecture(Lecture foundLecture, UniContext dbContext)
+        private static void AddExistingStudentToLecture(Lecture foundLecture, UniContext dbContext)
         {
             Console.WriteLine("Enter the ID of the existing student to add");
             string studentIdToAdd = Console.ReadLine();
@@ -840,19 +909,22 @@ namespace University_DB_Exam
                 else if (studentToAdd == null)
                 {
                     Console.WriteLine($"Student with ID '{studentIdToAdd}' not found.");
+                    InputKeyToContinue();
                 }
                 else
                 {
                     Console.WriteLine("Student is already assigned to the lecture.");
+                    InputKeyToContinue();
                 }
             }
             else
             {
                 Console.WriteLine("Invalid student ID format.");
+                InputKeyToContinue();
             }
         }
 
-        private void RemoveExistingStudentFromLecture(Lecture foundLecture, UniContext dbContext)
+        private static void RemoveExistingStudentFromLecture(Lecture foundLecture, UniContext dbContext)
         {
             Console.WriteLine("Enter the ID of the existing student to remove");
             string studentIdToRemove = Console.ReadLine();
@@ -864,15 +936,19 @@ namespace University_DB_Exam
                 if (studentToRemove != null)
                 {
                     foundLecture.LectureStudents.Remove(studentToRemove);
+                    Console.WriteLine("Student removed");
+                    InputKeyToContinue();
                 }
                 else
                 {
                     Console.WriteLine($"Student with ID '{studentIdToRemove}' not found in the lecture.");
+                    InputKeyToContinue();
                 }
             }
             else
             {
                 Console.WriteLine("Invalid student ID format.");
+                InputKeyToContinue();
             }
         }
 
@@ -885,6 +961,7 @@ namespace University_DB_Exam
             Console.WriteLine($"{lecture.Id}: {lecture.LectureName} - {lecture.LectureWorker} @ {facultyNames}");
             Console.WriteLine(" =========== Students of the class:");
             Console.WriteLine(studentNames);
+            InputKeyToContinue();
         }
 
         // update lectures (add/update/remove)
@@ -896,13 +973,14 @@ namespace University_DB_Exam
 
         #region UpdateStudent
 
-        public void UpdateStudentData()
+        public static void UpdateStudentData()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             string confirmUpdate = "n";
 
             while (confirmUpdate == "n" || confirmUpdate == "abort")
             {
+                ShowAllStudents();
                 Console.WriteLine("Type ID of the student to update ");
                 string inputStudentID = Console.ReadLine();
 
@@ -941,7 +1019,7 @@ namespace University_DB_Exam
 
         }
 
-        private void ProcessStudentAction(Student foundStudent, string studentActionChoice)
+        private static void ProcessStudentAction(Student foundStudent, string studentActionChoice)
         {
             switch (studentActionChoice)
             {
@@ -980,9 +1058,9 @@ namespace University_DB_Exam
             foundStudent.StudentLastName = studentNewInputLastName;
         }
 
-        private void UpdateStudentFaculty(Student foundStudent)
+        private static void UpdateStudentFaculty(Student foundStudent)
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             Console.WriteLine("Enter the name of the new faculty for the student");
             string facultyNameToUpdate = Console.ReadLine();
             Faculty facultyToUpdate = dbContext.Faculties.FirstOrDefault(f => f.FacultyName == facultyNameToUpdate);
@@ -996,7 +1074,7 @@ namespace University_DB_Exam
 
         private static void ConfirmAndUpdateStudent(string confirmUpdate)
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             Console.WriteLine("Confirm Student updates? (y/n)");
             Console.WriteLine(@"Type {abort} to quit");
             confirmUpdate = Console.ReadLine().ToLower();
@@ -1016,29 +1094,248 @@ namespace University_DB_Exam
 
 
         #endregion
-
         //adds lectures(s) to student
-        #endregion
+
 
         #region Change
-
-
         //move student to another faculty (update)
 
         //remove student from faculty
 
         #endregion
 
+        // ----------------- MENU METHODS-----------------
 
+
+        // ----------------- END OF MENU METHODS-----------------
         // ----------------- DATABASE METHODS -----------------
         //method that shows menu
 
+        public static void MainMenu()
+        {
+            while (true)
+            {
+                Console.Clear();
+                DisplayMainMenuOptions();
+
+                Console.Write("Enter your choice: ");
+                string userChoice = Console.ReadLine();
+
+                ProcessMainMenuChoice(userChoice);
+            }
+        }
+        private static void DisplayMainMenuOptions()
+        {
+            Console.WriteLine("========== Main Menu ==========");
+            Console.WriteLine("1. Show");
+            Console.WriteLine("2. Create");
+            Console.WriteLine("3. Change");
+            Console.WriteLine("4. Add");
+            Console.WriteLine("0. Exit");
+        }
+
+        private static void ProcessMainMenuChoice(string choice)
+        {
+            switch (choice)
+            {
+                case "1":
+                    ShowMenu();
+                    break;
+
+                case "2":
+                    CreateMenu();
+                    break;
+
+                case "3":
+                    ChangeMenu();
+                    break;
+
+                case "4":
+                    AddMenu();
+                    break;
+
+                case "0":
+                    Console.WriteLine("Exiting the program. Goodbye!");
+                    Environment.Exit(0);
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice. Please enter a valid option.");
+                    break;
+            }
+        }
+
+        private static void ShowMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("========== Show Menu ==========");
+            Console.WriteLine("1. Show All Faculties");
+            Console.WriteLine("2. Show All Lectures");
+            Console.WriteLine("3. Show All Students");
+            Console.WriteLine("4. Show Students From Faculty");
+            Console.WriteLine("5. Show Lectures Of Faculty");
+            Console.WriteLine("6. Show Lectures Of One Student");
+            Console.WriteLine("7. Show One Lecture Data");
+
+            Console.Write("Enter your choice: ");
+            string userChoice = Console.ReadLine();
+
+            ProcessShowMenuChoice(userChoice);
+        }
+
+        private static void ProcessShowMenuChoice(string choice)
+        {
+            switch (choice)
+            {
+                case "1":
+                    ShowAllFaculties();
+                    break;
+
+                case "2":
+                    ShowAllLectures();
+                    break;
+
+                case "3":
+                    ShowAllStudents();
+                    break;
+
+                case "4":
+                    ShowAllStudentsFromFaculty();
+                    break;
+
+                case "5":
+                    ShowAllLecturesOfFaculty();
+                    break;
+
+                case "6":
+                    ShowAllLecturesOfOneStudent();
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice. Please enter a valid option.");
+                    InputKeyToContinue();
+                    break;
+            }
+        }
 
 
+        private static void CreateMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("========== Create Menu ==========");
+            Console.WriteLine("1. Create New Faculty");
+            Console.WriteLine("2. Create New Lecture");
+            Console.WriteLine("3. Create New Student");
+
+            Console.Write("Enter your choice: ");
+            string userChoice = Console.ReadLine();
+
+            ProcessCreateMenuChoice(userChoice);
+        }
+
+        private static void ProcessCreateMenuChoice(string choice)
+        {
+            switch (choice)
+            {
+                case "1":
+                    CreateNewFaculty();
+                    break;
+
+                case "2":
+                    CreateNewLecture();
+                    break;
+
+                case "3":
+                    CreateNewStudent();
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice. Please enter a valid option.");
+                    InputKeyToContinue();
+                    break;
+            }
+        }
+
+        private static void ChangeMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("========== Change Menu ==========");
+            Console.WriteLine("1. Update Faculty Data");
+            Console.WriteLine("2. Update Lecture");
+            Console.WriteLine("3. Update Student Data");
+
+            Console.Write("Enter your choice: ");
+            string userChoice = Console.ReadLine();
+
+            ProcessChangeMenuChoice(userChoice);
+        }
+
+        private static void ProcessChangeMenuChoice(string choice)
+        {
+            switch (choice)
+            {
+                case "1":
+                    UpdateFacultyData();
+                    break;
+
+                case "2":
+                    UpdateLecture();
+                    break;
+
+                case "3":
+                    UpdateStudentData();
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice. Please enter a valid option.");
+                    InputKeyToContinue();
+                    break;
+            }
+        }
+
+        private static void AddMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("========== Add Menu ==========");
+            Console.WriteLine("1. Add Student To Faculty");
+            Console.WriteLine("2. Add Lecture To Faculty");
+
+            Console.Write("Enter your choice: ");
+            string userChoice = Console.ReadLine();
+
+            ProcessAddMenuChoice(userChoice);
+        }
+
+        private static void ProcessAddMenuChoice(string choice)
+        {
+            switch (choice)
+            {
+                case "1":
+                    AddStudentToFaculty();
+                    break;
+
+                case "2":
+                    AddLectureToFaculty();
+                    break;
+
+                default:
+                    Console.WriteLine("Invalid choice. Please enter a valid option.");
+                    InputKeyToContinue();
+                    break;
+            }
+        }
+
+        public static void InputKeyToContinue()
+        {
+            Console.WriteLine("Press any key to continue");
+            Console.ReadLine();
+        }
+
+        //=======================================================================================================================================================================
         // OBSOLETE
         public void UpdateLectureBACKUP()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             string confirmLecture = "n";
 
             while (confirmLecture == "n" || confirmLecture == "abort")
@@ -1232,7 +1529,7 @@ namespace University_DB_Exam
 
         public void ShowOneStudentData()
         {
-            var dbContext = new UniContext();
+            using var dbContext = new UniContext();
             List<string> oneStudentData = dbContext.Students
                 .Select(s =>
                 $"{s.Id}: {s.StudentFirstName} {s.StudentLastName}  || FACULTY: {s.StudentFaculty} || YEAR: {s.StudentYear} || EMAIL: {s.StudentEmail}") //sitoj vietoje dar reikia parodyti kokias lectures eina
