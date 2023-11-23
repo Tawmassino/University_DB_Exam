@@ -17,6 +17,17 @@ namespace University_DB_Exam
             //----------- program start ----------
             using var dbContext = new UniContext();
 
+
+            //foreach (var lecture in dbContext.Lectures.ToList())
+            //{
+            //    Console.WriteLine($"Lecture ID: {lecture.Id}");
+            //    Console.WriteLine($"Lecture Name: {lecture.LectureName}");
+
+            //    Console.WriteLine("=====================================");
+            //}
+
+            //InputKeyToContinue();
+
             MainMenu();
 
 
@@ -53,16 +64,24 @@ namespace University_DB_Exam
         public static void ShowAllLectures()
         {
             using var dbContext = new UniContext();
-            List<Lecture> allLectureNames = dbContext.Lectures.ToList();
+            //List<Lecture> allLectureNames = dbContext.Lectures.ToList();
+            var allLectureNames = dbContext.Lectures
+    .Include(l => l.LectureFaculties)
+    .Include(l => l.LectureStudents)
+    .ToList();
+
             Console.WriteLine();
             Console.WriteLine("=====================================");
             Console.WriteLine("All lectures:");
             foreach (Lecture lecture in allLectureNames)
             {
-                string facultyNames = string.Join(", ", lecture.LectureFaculties.Select(f => f.FacultyName));
+                if (lecture.LectureFaculties != null)
+                {
+                    string facultyNames = string.Join(", ", lecture.LectureFaculties.Select(f => f.FacultyName));
 
-                Console.WriteLine($"{lecture.LectureName}: {lecture.Id} - {lecture.LectureWorker} @ {facultyNames}");
-                Console.WriteLine();
+                    Console.WriteLine($"{lecture.LectureName}: {lecture.Id} - {lecture.LectureWorker} @ {facultyNames}");
+                    Console.WriteLine();
+                }
             };
             Console.WriteLine("=====================================");
             InputKeyToContinue();
@@ -79,11 +98,11 @@ namespace University_DB_Exam
             if (allStudents.Any())
             {
                 Console.WriteLine("=====================================");
-                Console.WriteLine(" ====== All Students ======");
+                Console.WriteLine(" =========== All Students ===========");
 
                 foreach (var student in allStudents)
                 {
-                    Console.WriteLine($"{student.Id}: {student.StudentFirstName} {student.StudentLastName}");
+                    Console.WriteLine($"{student.Id}: {student.StudentFirstName} {student.StudentLastName} | {student.StudentLevel} {student.StudentYear} | {student.StudentEmail}");
                 }
                 Console.WriteLine("=====================================");
             }
@@ -381,7 +400,7 @@ namespace University_DB_Exam
 
                 };
 
-                Console.WriteLine("Create New Lecture? (y/n)");
+                Console.WriteLine("Create New Student? (y/n)");
                 Console.WriteLine(@"Type {abort} to quit");
                 confirmNewStudent = Console.ReadLine().ToLower();
 
@@ -702,7 +721,7 @@ namespace University_DB_Exam
 
                     if (foundLecture != null)
                     {
-                        DisplayLectureDetails(foundLecture);
+                        DisplayLectureDetails(foundLecture.Id);
 
                         Console.WriteLine(" =========== What to change? =========== ");
                         Console.WriteLine("NAME || WORKER || FACULTY || STUDENTS |||||| [ABORT]");
@@ -952,17 +971,47 @@ namespace University_DB_Exam
             }
         }
 
-        private static void DisplayLectureDetails(Lecture lecture)
+        private static void DisplayLectureDetailsERROR(Lecture lecture)
         {
+            if (lecture != null)
+            {
+                string facultyNames = string.Join(", ", lecture.LectureFaculties.Select(f => f.FacultyName));
+                string studentNames = string.Join(", ", lecture.LectureStudents.Select(s => s.StudentFirstName + " " + s.StudentLastName));
+
+                Console.WriteLine(" =========== Lecture found! ===========");
+                Console.WriteLine($"{lecture.Id}: {lecture.LectureName} - {lecture.LectureWorker} @ {facultyNames}");
+                Console.WriteLine(" =========== Students of the class:");
+                Console.WriteLine(studentNames);
+                InputKeyToContinue();
+            }
+        }
+
+
+        private static void DisplayLectureDetails(Guid lectureId)
+        {
+            using var dbContext = new UniContext();
+
+            // Include related data
+            var lecture = dbContext.Lectures
+                .Include(l => l.LectureFaculties)
+                .Include(l => l.LectureStudents)
+                .FirstOrDefault(l => l.Id == lectureId);
+
+            if (lecture == null)
+            {
+                Console.WriteLine("Lecture not found.");
+                return;
+            }
+
             string facultyNames = string.Join(", ", lecture.LectureFaculties.Select(f => f.FacultyName));
             string studentNames = string.Join(", ", lecture.LectureStudents.Select(s => s.StudentFirstName + " " + s.StudentLastName));
 
-            Console.WriteLine(" =========== Lecture found! ===========");
-            Console.WriteLine($"{lecture.Id}: {lecture.LectureName} - {lecture.LectureWorker} @ {facultyNames}");
-            Console.WriteLine(" =========== Students of the class:");
+            Console.WriteLine(" =========== Lecture Information ===========");
+            Console.WriteLine($"{lecture.Id}: {lecture.LectureName} - {lecture.LectureWorker.WorkerFirstName} {lecture.LectureWorker.WorkerLastName} @ {facultyNames}");
+            Console.WriteLine(" =========== Students in the Lecture ===========");
             Console.WriteLine(studentNames);
-            InputKeyToContinue();
         }
+
 
         // update lectures (add/update/remove)
 
