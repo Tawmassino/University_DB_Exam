@@ -17,17 +17,21 @@ namespace University_DB_Exam
     {
         static void Main(string[] args)
         {
-            // Summary:
+            //    Summary:
 
             // Program Purpose:
-
             //    The program is university management system, allowing users to interact with data related to lectures, students, workers, and faculties.
 
             //Design and Structure:
 
             //    The program is structured around a database context(UniContext) using Entity Framework Core, which  represents the data model of a university.
             //    It uses a console-based user interface for interaction.
-            //    It consists of functions to create, update, and remove entities like lectures, students, workers, and faculties.
+            //    Models: Lectures, Students, Workers, and Faculties.
+            //    Services: Show, Create, Update (&Remove)
+            //    Trash Bin for Obsolete Methods.
+            //    The Program starts in Main with a method from Show Class, which is set as endless loop - main hub for user interface.
+            //    
+
 
             //Abilities:
 
@@ -40,9 +44,10 @@ namespace University_DB_Exam
 
             //    Due to limited development time and lack of skill on the part of the programmer there are quite a few elements of the program that could be deemed lacking.
             //    The error handling is basic, with generic exception handling. More specific exception handling could be implemented for better error reporting.
-            //    The program lacks validation for user inputs, which could lead to unexpected behavior if users provide invalid data.
-            //    The program might benefit from more structured input validation and user guidance.
+            //    The program lacks validation for user inputs, which could lead to unexpected behavior if users provide invalid data.            
             //    The design assumes a console interface, limiting the user experience compared to a graphical user interface (GUI).
+            //    The Worker class is optional, therefore not fully implemented in the time given.
+            //    Update Methods used to be within a while(true) loop, but due to some bugs and limited development time, the methods no longer have the while loop, however - some code might still be left.
 
 
             //Possible Improvements:
@@ -56,6 +61,8 @@ namespace University_DB_Exam
             //    There's always room for refactoring.
             //    Tutorial for User.
             //    Needs more debugging.
+            //    Configuring dbContext(UniContext) in the main program.
+            //    Manually defining OnModelCreating() method in dbContext
 
             //Overall:
 
