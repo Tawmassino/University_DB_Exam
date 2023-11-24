@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace University_DB_Exam
+namespace Student_Platform_DB_Exam.Models
 {
     public class Lecture
     {
@@ -13,9 +13,8 @@ namespace University_DB_Exam
         public string? LectureName { get; set; }
 
         public Worker? LectureWorker { get; set; }
-        public List<Faculty>? LectureFaculties { get; set; }
-
-        public List<Student>? LectureStudents { get; set; }
+        public List<Faculty>? LectureFaculties { get; set; } = new List<Faculty>();
+        public List<Student>? LectureStudents { get; set; } = new List<Student>();
 
 
     }

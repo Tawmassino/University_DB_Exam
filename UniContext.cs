@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Student_Platform_DB_Exam;
+using Student_Platform_DB_Exam.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using University_DB_Exam;
+using Student_Platform_DB_Exam.Models;
 
 namespace Student_Platform_DB_Exam
 {
