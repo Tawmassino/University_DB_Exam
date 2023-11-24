@@ -44,19 +44,25 @@ namespace Student_Platform_DB_Exam.Services
                 var allLectureNames = dbContext.Lectures
                     .Include(l => l.LectureFaculties)
                     .Include(l => l.LectureStudents)
+                    .Include(l => l.LectureWorker)
                     .ToList();
 
                 Console.WriteLine();
                 Console.WriteLine("=====================================");
                 Console.WriteLine("All lectures:");
 
+
                 foreach (Lecture lecture in allLectureNames)
                 {
+                    string workerName = lecture.LectureWorker != null
+                    ? $"{lecture.LectureWorker.WorkerFirstName} {lecture.LectureWorker.WorkerLastName}"
+                    : "N/A";
+
                     if (lecture.LectureFaculties != null)
                     {
                         string facultyNames = string.Join(", ", lecture.LectureFaculties.Select(f => f.FacultyName));
 
-                        Console.WriteLine($"{lecture.Id} : {lecture.LectureName} - {lecture.LectureWorker} @ {facultyNames}");
+                        Console.WriteLine($"{lecture.Id} : {lecture.LectureName} - {workerName} @ {facultyNames}");
                         Console.WriteLine();
                     }
                 }
@@ -151,6 +157,7 @@ namespace Student_Platform_DB_Exam.Services
 
         public static void AllLecturesOfFaculty()
         {
+
             try
             {
                 using var dbContext = new UniContext();
