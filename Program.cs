@@ -10,6 +10,7 @@ using System.Buffers.Text;
 using System.Diagnostics.Metrics;
 using static Student_Platform_DB_Exam.Models.Student;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Extensions.Options;
 
 namespace University_DB_Exam
 {
@@ -30,8 +31,8 @@ namespace University_DB_Exam
             //    Services: Show, Create, Update (&Remove)
             //    Trash Bin for Obsolete Methods.
             //    The Program starts in Main with a method from Show Class, which is set as endless loop - main hub for user interface.
-            //    
-
+            //    The Development was done in UniContext class, method protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){optionsBuilder.UseSqlServer($"Server=(localdb)\\mssqllocaldb;Database=University_EXAM;Trusted_Connection=True;");}
+            //    Change "University_EXAM" to create a new database
 
             //Abilities:
 

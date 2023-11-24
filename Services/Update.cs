@@ -382,25 +382,30 @@ namespace Student_Platform_DB_Exam.Services
         {
             try
             {
-                Console.WriteLine("Select a new worker for the lecture");
-                string workerOfLectureNameToChange = Console.ReadLine();
+                Console.WriteLine("Enter the ID of the new worker for the lecture");
+                string workerIdToChange = Console.ReadLine();
 
-                var fullNameToChange = workerOfLectureNameToChange;
-
-                Worker? foundWorker = dbContext.Workers
-                    .Where(w => (w.WorkerFirstName + " " + w.WorkerLastName) == fullNameToChange)
-                    .FirstOrDefault();
-
-                if (foundWorker != null)
+                if (Guid.TryParse(workerIdToChange, out Guid parsedWorkerIdToChange))
                 {
-                    foundLecture.LectureWorker = foundWorker;
-                    Console.WriteLine($"The Lecturer for {foundLecture} is now {workerOfLectureNameToChange}");
-                    dbContext.SaveChanges();
-                    InputKeyToContinue();
+                    Worker foundWorker = dbContext.Workers
+                        .FirstOrDefault(w => w.Id == parsedWorkerIdToChange);
+
+                    if (foundWorker != null)
+                    {
+                        foundLecture.LectureWorker = foundWorker;
+                        Console.WriteLine($"The Lecturer for {foundLecture.LectureName} is now {foundWorker.WorkerFirstName} {foundWorker.WorkerLastName}");
+                        dbContext.SaveChanges();
+                        InputKeyToContinue();
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Worker with ID '{workerIdToChange}' not found.");
+                        InputKeyToContinue();
+                    }
                 }
                 else
                 {
-                    Console.WriteLine($"Worker with name '{workerOfLectureNameToChange}' not found.");
+                    Console.WriteLine("Invalid worker ID format.");
                     InputKeyToContinue();
                 }
             }
@@ -409,6 +414,7 @@ namespace Student_Platform_DB_Exam.Services
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+
 
 
 

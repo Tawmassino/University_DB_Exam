@@ -19,6 +19,7 @@ namespace Student_Platform_DB_Exam.Services
                 List<Faculty> allFacultyNames = dbContext.Faculties.ToList();
                 Console.WriteLine();
                 Console.WriteLine("=====================================");
+                Console.WriteLine();
                 Console.WriteLine("All faculties:");
 
                 foreach (Faculty faculty in allFacultyNames)
@@ -84,6 +85,7 @@ namespace Student_Platform_DB_Exam.Services
                 using var dbContext = new UniContext();
                 var allStudents = dbContext.Students.Include(s => s.StudentFaculty).ToList();
 
+
                 Console.WriteLine();
 
                 if (allStudents.Any())
@@ -134,6 +136,7 @@ namespace Student_Platform_DB_Exam.Services
 
                 List<Student> allStudentsByFaculty = dbContext.Students.Where(s => s.StudentFaculty.FacultyName == chosenFaculty.FacultyName).ToList();
 
+                Console.WriteLine();
                 Console.WriteLine($" ====== Students in {chosenFaculty.FacultyName} ======");
 
                 foreach (var student in allStudentsByFaculty)
@@ -183,6 +186,7 @@ namespace Student_Platform_DB_Exam.Services
                 List<Lecture> allLecturesByFaculty = dbContext.Lectures
                     .Include(l => l.LectureFaculties)
                     .Include(l => l.LectureStudents)
+                    .Include(l => l.LectureWorker) // Include LectureWorker
                     .Where(l => l.LectureFaculties.Any(n => n.FacultyName == chosenFaculty.FacultyName))
                     .ToList();
 
