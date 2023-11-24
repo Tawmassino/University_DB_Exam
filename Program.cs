@@ -11,14 +11,8 @@ namespace University_DB_Exam
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
-            // ============ TO DO ============           
-
-
             //----------- program start ----------
             using var dbContext = new UniContext();
-
-            //MainMenu();
 
             Menu menu = new Menu();
             while (true)
@@ -33,8 +27,6 @@ namespace University_DB_Exam
             }
 
         }
-
-        // // --------------------------------- END OF MAIN  ---------------------------------
 
 
         // ====================================== METHODS  ======================================        

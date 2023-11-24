@@ -11,7 +11,6 @@ namespace Student_Platform_DB_Exam.Models
     {
         public Guid Id { get; set; }
         public string? FacultyName { get; set; }
-
         [NotMapped] public Worker? FacultyDean { get; set; }
 
         public List<Lecture>? FacultyLectures { get; set; } = new List<Lecture>();
